@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Blöf - Ana Sayfa</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<main class="container">
+<header class="brand">Blöf — Kart Oyunu</header>
+
+
+<section class="home-panel">
+<div class="home-actions">
+<button id="joinBtn" class="btn primary">Odaya Katıl</button>
+<button id="createBtn" class="btn">Oda Oluştur</button>
+</div>
+
+
+<!-- Katılma Formu (başta gizli) -->
+<form id="joinForm" class="panel hide" autocomplete="off">
+<h2>Odaya Katıl</h2>
+<label>Oda Kodu
+<input id="joinRoomId" type="text" placeholder="Örn: ABC123" required>
+</label>
+<label>Oyuncu Adı
+<input id="joinPlayer" type="text" placeholder="Takma isim" required>
+</label>
+<div class="row">
+<button type="button" id="joinBack" class="btn">Geri</button>
+<button type="submit" class="btn primary">Katıl</button>
+</div>
+</form>
+
+
+<!-- Oluşturma Formu (başta gizli) -->
+<form id="createForm" class="panel hide" autocomplete="off">
+<h2>Oda Oluştur</h2>
+<label>Oda Adı
+<input id="createRoomName" type="text" placeholder="Oda ismi" required>
+</label>
+<label>Maks Oyuncu Sayısı
+<select id="createMaxPlayers" required>
+<option value="2">2</option>
+<option value="3">3</option>
+<option value="4">4</option>
+<option value="5">5</option>
+<option value="6" selected>6</option>
+</select>
+</label>
+<label>Oyuncu Adı
+<input id="createPlayer" type="text" placeholder="Takma isim" required>
+</label>
+<div class="row">
+<button type="button" id="createBack" class="btn">Geri</button>
+<button type="submit" class="btn primary">Oluştur</button>
+</div>
+</form>
+
+
+</section>
+
+
+<footer class="muted">Yerel sunucuda: http://localhost:3000</footer>
+</main>
+
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="index.js"></script>
+</body>
+</html>

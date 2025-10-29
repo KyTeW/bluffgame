@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blöf Odası</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="room-container">
+    <header>
+      <h1 id="roomTitle">Oda</h1>
+      <button id="startGameBtn" class="btn">Oyunu Başlat</button>
+    </header>
+
+    <section class="table">
+      <div id="playerSlots" class="slots"></div>
+    </section>
+
+    <footer>
+      <p id="status">Oyuncular bekleniyor...</p>
+      <button id="leaveBtn" class="btn">Ayrıl</button>
+    </footer>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="room.js"></script>
+</body>
+</html>
