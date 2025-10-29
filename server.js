@@ -1,7 +1,6 @@
 const express = require("express");
 const http = require("http");
 const { Server } = require("socket.io");
-const { v4: uuidv4 } = require("uuid");
 const path = require("path");
 
 const app = express();
@@ -16,28 +15,35 @@ io.on("connection", (socket) => {
   console.log("Yeni bağlantı:", socket.id);
 
   // 🎮 Oda oluşturma
- socket.on("createRoom", (data, callback) => {
-  const { roomName, maxPlayers, playerName } = data;
-  
-  if (!roomName || !playerName) {
-    return callback({ success: false, message: "Eksik bilgi!" });
-  }
+  socket.on("createRoom", (data, callback) => {
+    const { roomName, maxPlayers, playerName } = data;
 
-  const roomId = Math.random().toString(36).substring(2, 8).toUpperCase();
+    if (!roomName || !playerName) {
+      return callback({ success: false, message: "Eksik bilgi!" });
+    }
 
-  socket.join(roomId);
-  console.log(`Oda oluşturuldu: ${roomId} (${roomName})`);
+    const roomId = Math.random().toString(36).substring(2, 8).toUpperCase();
 
-  callback({ success: true, roomId }); // 👈 Burası çok önemli
-});
+    // Odayı kaydet
+    rooms[roomId] = {
+      id: roomId,
+      name: roomName,
+      maxPlayers,
+      players: [{ id: socket.id, name: playerName }],
+    };
 
+    socket.join(roomId);
+    console.log(`🆕 Oda oluşturuldu: ${roomId} (${roomName})`);
 
-    // 1 saat sonra odayı sil
+    io.to(roomId).emit("updatePlayers", rooms[roomId].players);
+    callback({ success: true, roomId });
+
+    // ⏰ 1 saat sonra odayı sil
     setTimeout(() => {
       if (rooms[roomId]) {
         io.to(roomId).emit("roomClosed");
         delete rooms[roomId];
-        console.log(`Oda silindi (1 saat doldu): ${roomId}`);
+        console.log(`🗑️ Oda silindi (1 saat doldu): ${roomId}`);
       }
     }, 3600000);
   });
@@ -52,7 +58,10 @@ io.on("connection", (socket) => {
 
     room.players.push({ id: socket.id, name: playerName });
     socket.join(roomId);
+
     io.to(roomId).emit("updatePlayers", room.players);
+    console.log(`👤 ${playerName} odaya katıldı: ${roomId}`);
+
     callback({ success: true, roomId });
   });
 
@@ -65,7 +74,7 @@ io.on("connection", (socket) => {
     const distributed = {};
 
     room.players.forEach((p) => {
-      distributed[p.id] = cards.splice(0, 10);
+      distributed[p.id] = cards.splice(0, Math.floor(52 / room.players.length));
     });
 
     io.to(roomId).emit("gameStarted", distributed);
@@ -77,15 +86,18 @@ io.on("connection", (socket) => {
       const room = rooms[id];
       const index = room.players.findIndex((p) => p.id === socket.id);
       if (index !== -1) {
+        console.log(`🚪 Oyuncu ayrıldı: ${room.players[index].name}`);
         room.players.splice(index, 1);
         io.to(id).emit("updatePlayers", room.players);
-        if (room.players.length === 0) delete rooms[id];
+        if (room.players.length === 0) {
+          delete rooms[id];
+          console.log(`🗑️ Oda silindi (boş kaldı): ${id}`);
+        }
         break;
       }
     }
-    console.log("Bağlantı koptu:", socket.id);
   });
-
+});
 
 // 🃏 Basit kart üretici
 function generateCards(count) {
@@ -107,5 +119,5 @@ function generateCards(count) {
   return deck.slice(0, count);
 }
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => console.log(`🌐 Sunucu çalışıyor: http://localhost:${PORT}`));
