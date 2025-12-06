@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Blöf - Sayılar</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <div id="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo">BLÖF</div>
+        <div class="subtitle">Sayı Kartları</div>
+      </div>
+      <div class="controls">
+        <input id="playerName" placeholder="Kullanıcı adı" />
+        <button id="btnLeave" class="ghost hidden">Ayrıl</button>
+      </div>
+    </header>
+
+    <main class="container">
+      <aside id="menu" class="panel card soft">
+        <h3>Oda Yönetimi</h3>
+        <input id="createRoomName" placeholder="Oda adı (opsiyonel)" />
+        <div class="row">
+          <input id="createMax" placeholder="Max oyuncu" />
+          <button id="btnCreate">Oda Oluştur</button>
+        </div>
+        <hr/>
+        <input id="joinCode" placeholder="Oda kodu" />
+        <button id="btnJoin">Odaya Katıl</button>
+        <div id="menuMsg" class="hint"></div>
+        <div class="leaderboard card soft mt">
+          <h4>Oyuncular</h4>
+          <div id="playersList" class="players"></div>
+        </div>
+      </aside>
+
+      <section id="room" class="panel hidden">
+        <div class="roomHeader">
+          <div>
+            <h3 id="roomTitle">Oda</h3>
+            <div id="roomInfo" class="meta"></div>
+          </div>
+          <div class="roomActions">
+            <button id="btnStart">Oyunu Başlat</button>
+          </div>
+        </div>
+
+        <div id="tableArea" class="tableCard">
+          <div id="tableScene" class="scene">
+            <div id="targetBadge" class="target-badge hidden">
+              Hedef: <span id="targetRankDisplay">—</span>
+            </div>
+
+            <div id="bluffOverlay" class="bluff-overlay hidden" aria-hidden="true">
+              <div class="bluff-card">
+                <div id="bluffText" class="bluff-text">BLÖF</div>
+                <div id="bluffSub" class="bluff-sub">Karar bekleniyor...</div>
+              </div>
+            </div>
+
+            <div id="tableSurface" class="surface">
+              <div id="centerPile" class="pile">ORTAK</div>
+            </div>
+
+            <div id="seats" class="seats"></div>
+          </div>
+        </div>
+
+        <div id="handPanel" class="handPanel">
+          <div class="handTop">
+            <div class="roundInfo">Tur <span id="roundNo">0</span></div>
+            <div class="actions">
+              
+              <select id="declaredRankSelector" class="hidden" style="padding: 8px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: #2c3e50; color: white; font-weight:bold;">
+                <option value="" disabled selected>Hedef Seç ▼</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+              </select>
+
+              <button id="btnPlaySelected">Seçili Oyna</button>
+              <button id="btnCall">Blöf Çağır</button>
+              <button id="btnNextRound">Sonraki Tur</button>
+            </div>
+          </div>
+          <div id="handArea" class="handArea"></div>
+        </div>
+        
+        <div id="msgs" class="msgs"></div>
+      </section>
+    </main>
+  </div>
+
+  <template id="cardTpl">
+    <div class="card3d">
+      <div class="cardFace front">
+        </div>
+      <div class="cardFace back">🂠</div>
+    </div>
+  </template>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/client.js"></script>
+</body>
+</html>
